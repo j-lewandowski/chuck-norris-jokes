@@ -10,8 +10,9 @@ export class UsersService {
   ];
 
   create(createUserDto: CreateUserDto) {
-    this.mockUsers.push({ id: uuidv4(), ...createUserDto });
-    return createUserDto;
+    const newUser = { id: uuidv4(), ...createUserDto };
+    this.mockUsers.push(newUser);
+    return newUser;
   }
 
   findAll() {
