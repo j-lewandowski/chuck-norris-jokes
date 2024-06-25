@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
@@ -13,6 +17,12 @@ export class UsersService {
   private saltOrRounds = 10;
 
   async create(createUserDto: CreateUserDto) {
+    const existingUser = this.findOne(createUserDto.email);
+
+    if (existingUser) {
+      throw new ConflictException('User with this email already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(
       createUserDto.password,
       this.saltOrRounds,
@@ -27,21 +37,30 @@ export class UsersService {
 
     const userWithoutPassword = { ...newUser };
     delete userWithoutPassword.password;
-    return newUser;
+    return userWithoutPassword;
   }
 
   findAll() {
-    const usersWithoutPassword = this.mockUsers.map((user) => {
-      id: user.id;
-      email: user.email;
-    });
+    const usersWithoutPassword = this.mockUsers.map((user) => ({
+      id: user.id,
+      email: user.email,
+    }));
     return usersWithoutPassword;
+  }
+
+  findOne(email: string) {
+    const user = this.mockUsers.find((user) => user.email === email);
+
+    if (!user) {
+      return null;
+    }
+    return user;
   }
 
   remove(id: string) {
     const removedUser = this.mockUsers.find((user) => user.id === id);
     if (!removedUser) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     this.mockUsers = this.mockUsers.filter((user) => user.id !== id);
     return {

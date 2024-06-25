@@ -25,13 +25,41 @@ describe('UsersService', () => {
     });
   });
 
-  it('should find all users', () => {
+  it('should throw an error if user with the same email already exists', async () => {
+    await service.create({ email: 'user1@test.com', password: 'password1' });
+
+    await expect(
+      service.create({ email: 'user1@test.com', password: 'password2' }),
+    ).rejects.toThrow('User with this email already exists');
+  });
+
+  it('should find all users', async () => {
     // Assuming create method works as expected
-    service.create({ email: 'user1@test.com', password: 'password1' });
-    service.create({ email: 'user2@test.com', password: 'password2' });
+    await service.create({ email: 'user1@test.com', password: 'password1' });
+    await service.create({ email: 'user2@test.com', password: 'password2' });
 
     const users = service.findAll();
-    expect(users.length).toBeGreaterThanOrEqual(2);
+
+    expect(users.length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('should find a user by email', async () => {
+    // Assuming create method works as expected
+    const createdUser = await service.create({
+      email: 'user3@test.com',
+      password: 'password1',
+    });
+
+    const foundUser = service.findOne(createdUser.email);
+    expect(foundUser).toMatchObject({
+      id: expect.any(String),
+      email: 'user3@test.com',
+      password: expect.not.stringContaining('password1'),
+    });
+  });
+
+  it('should throw an error if user not found by email', () => {
+    expect(service.findOne('non-existing-email')).toEqual(null);
   });
 
   it('should remove a user by ID', async () => {
