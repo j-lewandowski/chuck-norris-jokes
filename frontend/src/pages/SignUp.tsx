@@ -18,7 +18,13 @@ const SignUp = () => {
     });
 
     const res = await data.json();
-    console.log(res);
+
+    if (res.error) {
+      alert(res.message);
+      return;
+    }
+    console.log(res.token);
+    localStorage.setItem("token", res.token);
   };
 
   return (
