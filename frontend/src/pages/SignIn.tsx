@@ -3,13 +3,13 @@ import Logo from "../images/joke.svg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const onSubmit = async () => {
     if (!email || !password) return;
-    const data = await fetch("http://localhost:3000/auth/sign-up", {
+    const data = await fetch("http://localhost:3000/auth/sign-in", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,12 +53,12 @@ const SignUp = () => {
               disabled={password.length === 0 || email.length === 0}
               onClick={onSubmit}
             >
-              CREATE ACCOUNT
+              LOG IN
             </Button>
             <p>
-              Already have an account?{" "}
-              <Link to={"/sign-in"} className="font-bold">
-                Log in here
+              Don't have an account?{" "}
+              <Link to={"/sign-up"} className="font-bold">
+                Sign up here
               </Link>
               .
             </p>
@@ -73,4 +73,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;
