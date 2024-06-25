@@ -9,19 +9,19 @@ describe('UsersController', () => {
     create: jest.fn((dto) => {
       return {
         id: 'mockId',
-        ...dto,
+        email: dto.email,
       };
     }),
 
     findAll: jest.fn(() => [
-      { id: '1', email: 'user1@test.com', password: 'pass1' },
-      { id: '2', email: 'user2@test.com', password: 'pass2' },
+      { id: '1', email: 'user1@test.com' },
+      { id: '2', email: 'user2@test.com' },
     ]),
 
     findOne: jest.fn((id) => ({
       id,
       email: 'user@test.com',
-      password: '12345',
+      password: 'hashedPassword',
     })),
 
     remove: jest.fn().mockResolvedValue({}),
@@ -49,14 +49,13 @@ describe('UsersController', () => {
     ).toEqual({
       id: expect.any(String),
       email: 'test@email.com',
-      password: '12345',
     });
   });
 
   it('should return an array of users', () => {
     expect(controller.findAll()).toEqual([
-      { id: '1', email: 'user1@test.com', password: 'pass1' },
-      { id: '2', email: 'user2@test.com', password: 'pass2' },
+      { id: '1', email: 'user1@test.com' },
+      { id: '2', email: 'user2@test.com' },
     ]);
     expect(mockService.findAll).toHaveBeenCalled();
   });
@@ -67,7 +66,7 @@ describe('UsersController', () => {
     expect(controller.findOne(userId)).toEqual({
       id: userId,
       email: 'user@test.com',
-      password: '12345',
+      password: expect.any(String),
     });
     expect(mockService.findOne).toHaveBeenCalledWith(userId);
   });

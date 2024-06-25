@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -9,24 +10,32 @@ export class UsersService {
     { id: uuidv4(), email: 'test2@test.com', password: '12345' },
   ];
 
-  create(createUserDto: CreateUserDto) {
-    const newUser = { id: uuidv4(), ...createUserDto };
+  private saltOrRounds = 10;
+
+  async create(createUserDto: CreateUserDto) {
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      this.saltOrRounds,
+    );
+    const newUser = {
+      ...createUserDto,
+      id: uuidv4(),
+      password: hashedPassword,
+    };
+
     this.mockUsers.push(newUser);
+
+    const userWithoutPassword = { ...newUser };
+    delete userWithoutPassword.password;
     return newUser;
   }
 
   findAll() {
-    return this.mockUsers;
-  }
-
-  findOne(id: string) {
-    const user = this.mockUsers.find((user) => user.id === id);
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    return user;
+    const usersWithoutPassword = this.mockUsers.map((user) => {
+      id: user.id;
+      email: user.email;
+    });
+    return usersWithoutPassword;
   }
 
   remove(id: string) {
@@ -35,6 +44,8 @@ export class UsersService {
       throw new Error('User not found');
     }
     this.mockUsers = this.mockUsers.filter((user) => user.id !== id);
-    return removedUser;
+    return {
+      message: 'Deleted user successfully',
+    };
   }
 }
