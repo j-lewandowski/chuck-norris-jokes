@@ -15,6 +15,9 @@ function App() {
           <Route path="/random-joke" element={<PrivateRoute />}>
             <Route path="/random-joke" element={<RandomJoke />} />
           </Route>
+          <Route path="/my-jokes" element={<PrivateRoute />}>
+            <Route path="/my-jokes" element={<div></div>} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
