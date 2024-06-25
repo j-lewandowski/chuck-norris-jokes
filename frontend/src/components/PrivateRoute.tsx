@@ -10,7 +10,7 @@ const PrivateRoute = () => {
   return isAuthenticated ? (
     <>
       <Sidebar />
-      <div>
+      <div className="w-full h-full pl-6">
         <Outlet />
       </div>
     </>

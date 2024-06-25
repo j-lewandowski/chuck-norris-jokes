@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import Logo from "../images/joke.svg";
+import Logo from "../images/logo.svg?react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -30,7 +30,8 @@ const SignIn = () => {
   return (
     <div className="w-full h-full bg-card-background rounded-xl py-4 flex flex-col items-center shadow-xl">
       <div className="flex flex-col items-center justify-around w-full max-w-[50%] h-full">
-        <img src={Logo} alt="Logo" className="w-16 h-16" />
+        <Logo className="w-16 h-16 fill-sidebar-background" />
+
         <span className="text-3xl">Explore "Chuck Jokes" with us!</span>
         <div className="w-full flex flex-col items-center gap-y-6">
           <TextField
@@ -54,7 +55,7 @@ const SignIn = () => {
           <div className="w-full flex flex-col items-center justify-center gap-y-3">
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               fullWidth
               disabled={password.length === 0 || email.length === 0}
               onClick={onSubmit}
