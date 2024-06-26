@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -19,10 +19,11 @@ function App() {
   });
 
   return (
-    <div className="px-32 py-24 w-full h-full flex">
+    <div className="px-40 py-32 w-full h-full flex">
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Navigate to="/random-joke" />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/random-joke" element={<PrivateRoute />}>

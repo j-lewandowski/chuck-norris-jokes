@@ -1,7 +1,78 @@
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import Chuck from "../images/chuck.png";
+import { useEffect, useState, useRef } from "react";
 
 const RandomJoke = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [joke, setJoke] = useState<string>("");
+
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const [impersonateInput, setInpersonateInput] = useState<string>("");
+
+  const isMounted = useRef(false);
+
+  const replaceChuckNorris = (joke: string) => {
+    return joke.replace(new RegExp("Chuck Norris", "g"), impersonateInput);
+  };
+
+  const fetchRandomJoke = async (category: string = "") => {
+    try {
+      let url = "https://api.chucknorris.io/jokes/random";
+      if (category) {
+        url += `?category=${category}`;
+      }
+      const response = await fetch(url);
+      const data = await response.json();
+      if (impersonateInput) {
+        setJoke(replaceChuckNorris(data.value));
+        return;
+      }
+      setJoke(data.value);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        "https://api.chucknorris.io/jokes/categories"
+      );
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onDrawRandomJoke = async () => {
+    await fetchRandomJoke(selectedCategory);
+  };
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    fetchCategories();
+    fetchRandomJoke();
+    setIsLoading(false);
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className="w-full h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12 relative">
       <img
@@ -11,20 +82,43 @@ const RandomJoke = () => {
       />
 
       <span className="text-3xl font-semibold">Get your random joke</span>
-      <p>
-        “If Chuck Norris were to travel to an alternate dimension in which there
-        was another Chuck Norris and they both fight, they would both win”
-      </p>
+      <p className="text-xl italic">"{joke}"</p>
 
       <div className="w-full flex gap-x-6">
         <div className="w-2/3 gap-y-8 flex flex-col">
-          <TextField fullWidth />
-          <Button variant="contained" color="secondary" fullWidth>
-            DRAW A RANDOM CHUCK NORRIS JOKE
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Impersonate"
+            placeholder="Impersonate Chuck Norris"
+            value={impersonateInput}
+            onChange={(e) => setInpersonateInput(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            fullWidth
+            onClick={onDrawRandomJoke}
+          >
+            DRAW A RANDOM {impersonateInput ? impersonateInput : "CHUCK NORRIS"}{" "}
+            JOKE
           </Button>
         </div>
         <div className="w-1/3 gap-y-8 flex flex-col">
-          <TextField fullWidth />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Categories</InputLabel>
+            <Select
+              label="Categories"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {categories.map((category) => (
+                <MenuItem key={category} value={category}>
+                  {category}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button variant="contained" fullWidth>
             SAVE THIS JOKE
           </Button>

@@ -1,11 +1,13 @@
 import { Button, TextField } from "@mui/material";
 import Logo from "../images/logo.svg?react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const SignIn = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const onSubmit = async () => {
     if (!email || !password) return;
@@ -25,6 +27,7 @@ const SignIn = () => {
     }
 
     localStorage.setItem("token", res.token);
+    navigate("/random-joke");
   };
 
   return (
