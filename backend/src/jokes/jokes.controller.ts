@@ -22,9 +22,9 @@ export class JokesController {
     return this.jokesService.create({ ...createJokeDto, userId: req.user.id });
   }
 
-  @Get(':userId')
-  findAllByUser(@Param('userId') userId: string) {
-    return this.jokesService.findAllByUser(userId);
+  @Get()
+  findAllUserJokes(@Req() req) {
+    return this.jokesService.findAllUserJokes(req.user.id);
   }
 
   @Delete('joke/:id')

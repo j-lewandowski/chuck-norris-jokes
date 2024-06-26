@@ -8,11 +8,10 @@ export class JokesService {
 
   create(createJokeDto: CreateJokeDto) {
     this.mockJokes.push({ id: uuidv4(), ...createJokeDto });
-    console.log(this.mockJokes);
     return createJokeDto;
   }
 
-  findAllByUser(userId: string) {
+  findAllUserJokes(userId: string) {
     return this.mockJokes.filter((joke) => joke.userId === userId);
   }
 
