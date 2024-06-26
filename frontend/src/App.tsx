@@ -5,6 +5,8 @@ import SignIn from "./pages/SignIn";
 import RandomJoke from "./pages/RandomJoke";
 import PrivateRoute from "./components/PrivateRoute";
 import { createTheme, ThemeProvider } from "@mui/material";
+import MyJokes from "./pages/MyJokes";
+import { AddJoke } from "./pages/AddJoke";
 
 function App() {
   const theme = createTheme({
@@ -30,7 +32,10 @@ function App() {
               <Route path="/random-joke" element={<RandomJoke />} />
             </Route>
             <Route path="/my-jokes" element={<PrivateRoute />}>
-              <Route path="/my-jokes" element={<div></div>} />
+              <Route path="/my-jokes" element={<MyJokes />} />
+            </Route>
+            <Route path="/add-joke" element={<PrivateRoute />}>
+              <Route path="/add-joke" element={<AddJoke />} />
             </Route>
           </Routes>
         </BrowserRouter>

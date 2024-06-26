@@ -1,8 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../images/logo.svg?react";
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const routes = [
     {
       name: "RANDOM JOKE",
@@ -18,13 +19,19 @@ const Sidebar = () => {
     },
   ];
 
+  const onLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/sign-in");
+  };
+
   return (
-    <nav className="w-1/4 h-full bg-sidebar-background rounded-3xl flex flex-col items-center justify-between text-white px-8 pt-8 pb-16 relative shadow-2xl">
+    <nav className="w-1/4 min-w-1/4 h-full bg-sidebar-background rounded-3xl flex flex-col items-center justify-between text-white px-8 pt-8 pb-16 relative shadow-2xl">
       <div className="w-full flex flex-col items-center justify-start">
         <Logo className="aspect-square w-auto h-12 fill-white" />
         <ul className="w-full flex flex-col gap-y-8 text-xl mt-8">
           {routes.map((route) => (
             <Link
+              key={route.name}
               to={route.href}
               className={
                 location.pathname === route.href
@@ -41,7 +48,9 @@ const Sidebar = () => {
         </ul>
       </div>
 
-      <span className="text-xl w-full">LOG OUT</span>
+      <span className="text-xl w-full hover:cursor-pointer" onClick={onLogout}>
+        LOG OUT
+      </span>
 
       <span className="absolute bottom-4 text-xs">
         made with Chuck by Chuck - {new Date().getFullYear()}

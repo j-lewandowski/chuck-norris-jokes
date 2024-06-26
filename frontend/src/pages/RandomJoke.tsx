@@ -25,6 +25,23 @@ const RandomJoke = () => {
     return joke.replace(new RegExp("Chuck Norris", "g"), impersonateInput);
   };
 
+  const onSave = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/jokes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ joke }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const fetchRandomJoke = async (category: string = "") => {
     try {
       let url = "https://api.chucknorris.io/jokes/random";
@@ -74,7 +91,7 @@ const RandomJoke = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="w-full h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12 relative">
+    <div className="w-full max-w-3xl  h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12 relative">
       <img
         src={Chuck}
         alt="Chuck Norris picture"
@@ -119,7 +136,7 @@ const RandomJoke = () => {
               ))}
             </Select>
           </FormControl>
-          <Button variant="contained" fullWidth>
+          <Button variant="contained" fullWidth onClick={onSave}>
             SAVE THIS JOKE
           </Button>
         </div>
