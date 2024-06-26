@@ -5,13 +5,16 @@ import {
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async signIn(credentials: SignInDto) {
     const user = this.usersService.findOne(credentials.email);
@@ -27,19 +30,18 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-      throw new Error('JWT secret is not defined');
-    }
-    const token = jwt.sign({ id, email }, process.env.JWT_SECRET);
+    const token = await this.jwtService.signAsync(
+      { id, email },
+      { secret: process.env.JWT_SECRET },
+    );
 
-    return token;
+    return { token };
   }
 
   async signUp(credentials: SignUpDto) {
     const user = await this.usersService.create(credentials);
     const { id, email } = user;
-    const token = jwt.sign({ id, email }, process.env.JWT_SECRET);
-    return token;
+    const token = await this.jwtService.signAsync({ id, email });
+    return { token };
   }
 }
