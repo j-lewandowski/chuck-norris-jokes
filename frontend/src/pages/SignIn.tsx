@@ -2,6 +2,7 @@ import { Button, TextField } from "@mui/material";
 import Logo from "../images/logo.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Particles from "../images/particles.svg?react";
 
 const SignIn = () => {
   const [email, setEmail] = useState<string>("");
@@ -31,7 +32,9 @@ const SignIn = () => {
   };
 
   return (
-    <div className="w-full h-full bg-card-background rounded-xl py-4 flex flex-col items-center shadow-xl">
+    <div className="w-full h-full bg-card-background rounded-xl py-4 flex flex-col items-center shadow-xl relative">
+      <Particles className="absolute left-0 -translate-x-[50%] top-12 h-32" />
+      <Particles className="absolute right-0 translate-x-[50%] bottom-12 h-16" />
       <div className="flex flex-col items-center justify-around w-full max-w-[50%] h-full">
         <Logo className="w-16 h-16 fill-sidebar-background" />
 
