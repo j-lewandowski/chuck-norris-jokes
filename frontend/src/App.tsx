@@ -7,6 +7,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import { createTheme, ThemeProvider } from "@mui/material";
 import MyJokes from "./pages/MyJokes";
 import { AddJoke } from "./pages/AddJoke";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const theme = createTheme({
@@ -39,6 +41,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        <ToastContainer position="bottom-center" />
       </ThemeProvider>
     </div>
   );

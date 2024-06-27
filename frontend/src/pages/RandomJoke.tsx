@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import Chuck from "../images/chuck.png";
 import { useEffect, useState, useRef } from "react";
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 const RandomJoke = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -35,10 +37,11 @@ const RandomJoke = () => {
         },
         body: JSON.stringify({ joke }),
       });
-      const data = await response.json();
-      console.log(data);
+      await response.json();
+
+      toast.success("Joke saved successfully");
     } catch (error) {
-      console.error(error);
+      toast.error("Failed to save joke");
     }
   };
 
@@ -49,6 +52,12 @@ const RandomJoke = () => {
         url += `?category=${category}`;
       }
       const response = await fetch(url);
+
+      if (!response.ok) {
+        toast.error(
+          "Chuck Norris kicked the joke back to the server, try again"
+        );
+      }
       const data = await response.json();
       if (impersonateInput) {
         setJoke(replaceChuckNorris(data.value));
@@ -56,7 +65,7 @@ const RandomJoke = () => {
       }
       setJoke(data.value);
     } catch (error) {
-      console.error(error);
+      toast.error("Chuck Norris kicked the joke back to the server, try again");
     }
   };
 
@@ -68,12 +77,14 @@ const RandomJoke = () => {
       const data = await response.json();
       setCategories(data);
     } catch (error) {
-      console.error(error);
+      setCategories(["No categories found"]);
     }
   };
 
   const onDrawRandomJoke = async () => {
+    setIsLoading(true);
     await fetchRandomJoke(selectedCategory);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -88,8 +99,6 @@ const RandomJoke = () => {
     };
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
-
   return (
     <div className="w-full max-w-3xl  h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12 relative">
       <img
@@ -99,7 +108,13 @@ const RandomJoke = () => {
       />
 
       <span className="text-3xl font-semibold">Get your random joke</span>
-      <p className="text-xl italic">"{joke}"</p>
+      {isLoading ? (
+        <div className="h-12 w-full flex items-center justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <p className="text-xl italic">"{joke}"</p>
+      )}
 
       <div className="w-full flex gap-x-6">
         <div className="w-2/3 gap-y-8 flex flex-col">
