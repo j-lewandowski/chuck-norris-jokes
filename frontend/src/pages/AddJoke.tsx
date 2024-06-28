@@ -8,7 +8,7 @@ export const AddJoke = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await fetch("http://localhost:3000/jokes", {
+      await fetch(import.meta.env.VITE_API_URL + "/jokes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

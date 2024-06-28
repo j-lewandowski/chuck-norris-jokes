@@ -11,7 +11,7 @@ const SignUp = () => {
 
   const onSubmit = async () => {
     if (!email || !password) return;
-    const data = await fetch("http://localhost:3000/auth/sign-up", {
+    const data = await fetch(import.meta.env.VITE_API_URL + "/auth/sign-up", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -13,7 +13,7 @@ const MyJokes = () => {
     isMounted.current = true;
     const fetchJokes = async () => {
       try {
-        const response = await fetch("http://localhost:3000/jokes/", {
+        const response = await fetch(import.meta.env.VITE_API_URL + "/jokes", {
           headers: {
             authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -37,7 +37,7 @@ const MyJokes = () => {
 
   const onDelete = async (id: string) => {
     try {
-      await fetch(`http://localhost:3000/jokes/joke/${id}`, {
+      await fetch(import.meta.env.VITE_API_URL + `/jokes/joke/${id}`, {
         method: "DELETE",
         headers: {
           authorization: `Bearer ${localStorage.getItem("token")}`,

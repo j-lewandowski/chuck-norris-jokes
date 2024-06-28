@@ -29,7 +29,7 @@ const RandomJoke = () => {
 
   const onSave = async () => {
     try {
-      const response = await fetch("http://localhost:3000/jokes", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "/jokes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

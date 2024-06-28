@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+  backend:
+    build: ./backend
+    container_name: backend
+    environment:
+      JWT_SECRET: "VERY_SECRET_VALUE"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    stdin_open: true
