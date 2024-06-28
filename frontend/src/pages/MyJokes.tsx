@@ -68,10 +68,12 @@ const MyJokes = () => {
               className="w-full text-lg flex items-center gap-x-4 px-2 group duration-150 hover:bg-light-pink/50 hover:cursor-pointer font-light rounded-lg"
             >
               <span>{i + 1}.</span>
-              <div className="flex-1">
+              <div className="flex-1 flex">
+                "
                 <div className="max-w-xl overflow-hidden truncate">
                   {joke.joke}
                 </div>
+                "
               </div>
 
               <FiDelete className="hover:cursor-pointer ml-10 group-hover:text-dark-pink" />
