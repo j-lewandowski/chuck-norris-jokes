@@ -1,25 +1,20 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  private mockUsers = [
-    { id: uuidv4(), email: 'test@test.com', password: '12345' },
-    { id: uuidv4(), email: 'test2@test.com', password: '12345' },
-  ];
+  constructor(private prisma: PrismaService) {}
 
   private saltOrRounds = 10;
 
   async create(createUserDto: CreateUserDto) {
-    const existingUser = this.findOne(createUserDto.email);
+    const existingUsers = await this.prisma.user.count({
+      where: { email: createUserDto.email },
+    });
 
-    if (existingUser) {
+    if (existingUsers > 0) {
       throw new ConflictException('User with this email already exists');
     }
 
@@ -29,40 +24,42 @@ export class UsersService {
     );
     const newUser = {
       ...createUserDto,
-      id: uuidv4(),
       password: hashedPassword,
     };
 
-    this.mockUsers.push(newUser);
+    // this.mockUsers.push(newUser);
+    await this.prisma.user.create({
+      data: newUser,
+    });
 
     const userWithoutPassword = { ...newUser };
     delete userWithoutPassword.password;
     return userWithoutPassword;
   }
 
-  findAll() {
-    const usersWithoutPassword = this.mockUsers.map((user) => ({
-      id: user.id,
-      email: user.email,
-    }));
-    return usersWithoutPassword;
+  async findAll() {
+    const users = await this.prisma.user.findMany({});
+    return users;
   }
 
-  findOne(email: string) {
-    const user = this.mockUsers.find((user) => user.email === email);
-
+  async findOne(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email: email } });
     if (!user) {
       return null;
     }
     return user;
   }
 
-  remove(id: string) {
-    const removedUser = this.mockUsers.find((user) => user.id === id);
-    if (!removedUser) {
-      throw new NotFoundException('User not found');
+  async remove(email: string) {
+    const existingUsers = await this.prisma.user.count({
+      where: { email: email },
+    });
+
+    if (existingUsers > 0) {
+      throw new ConflictException('User with this email already exists');
     }
-    this.mockUsers = this.mockUsers.filter((user) => user.id !== id);
+
+    await this.prisma.user.delete({ where: { email: email } });
     return {
       message: 'Deleted user successfully',
     };

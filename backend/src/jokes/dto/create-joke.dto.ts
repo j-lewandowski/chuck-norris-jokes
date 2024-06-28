@@ -4,6 +4,6 @@ export class CreateJokeDto {
   @MinLength(1, {
     message: 'Content is too short',
   })
-  content: string;
+  joke: string;
   userId: string;
 }

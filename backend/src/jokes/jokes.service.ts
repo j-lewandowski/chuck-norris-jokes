@@ -1,22 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateJokeDto } from './dto/create-joke.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class JokesService {
-  private mockJokes = [];
+  constructor(private prisma: PrismaService) {}
 
-  create(createJokeDto: CreateJokeDto) {
-    this.mockJokes.push({ id: uuidv4(), ...createJokeDto });
-    return createJokeDto;
+  async create(createJokeDto: CreateJokeDto) {
+    const joke = await this.prisma.joke.create({
+      data: createJokeDto,
+    });
+    return joke;
   }
 
-  findAllUserJokes(userId: string) {
-    return this.mockJokes.filter((joke) => joke.userId === userId);
+  async findAllUserJokes(userId: string) {
+    const jokes = await this.prisma.joke.findMany({
+      where: { userId: userId },
+    });
+    return jokes;
   }
 
-  remove(id: string) {
-    this.mockJokes = this.mockJokes.filter((user) => user.id !== id);
+  async remove(id: string) {
+    await this.prisma.joke.delete({
+      where: { id: id },
+    });
     return {
       message: 'Deleted user successfully',
     };

@@ -18,17 +18,20 @@ export class JokesController {
   constructor(private readonly jokesService: JokesService) {}
 
   @Post()
-  create(@Req() req, @Body() createJokeDto: CreateJokeDto) {
-    return this.jokesService.create({ ...createJokeDto, userId: req.user.id });
+  async create(@Req() req, @Body() createJokeDto: CreateJokeDto) {
+    return await this.jokesService.create({
+      ...createJokeDto,
+      userId: req.user.email,
+    });
   }
 
   @Get()
-  findAllUserJokes(@Req() req) {
-    return this.jokesService.findAllUserJokes(req.user.id);
+  async findAllUserJokes(@Req() req) {
+    return await this.jokesService.findAllUserJokes(req.user.email);
   }
 
   @Delete('joke/:id')
-  remove(@Param('id') id: string) {
-    return this.jokesService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.jokesService.remove(id);
   }
 }

@@ -17,11 +17,11 @@ export class AuthService {
   ) {}
 
   async signIn(credentials: SignInDto) {
-    const user = this.usersService.findOne(credentials.email);
+    const user = await this.usersService.findOne(credentials.email);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const { id, email, password } = user;
+    const { email, password } = user;
     const isPasswordMatching = await bcrypt.compare(
       credentials.password,
       password,
@@ -31,7 +31,7 @@ export class AuthService {
     }
 
     const token = await this.jwtService.signAsync(
-      { id, email },
+      { email },
       { secret: process.env.JWT_SECRET },
     );
 
@@ -40,8 +40,8 @@ export class AuthService {
 
   async signUp(credentials: SignUpDto) {
     const user = await this.usersService.create(credentials);
-    const { id, email } = user;
-    const token = await this.jwtService.signAsync({ id, email });
+    const { email } = user;
+    const token = await this.jwtService.signAsync({ email });
     return { token };
   }
 }
