@@ -57,7 +57,7 @@ const MyJokes = () => {
   }
 
   return (
-    <div className="w-full max-w-3xl h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12">
+    <div className="w-full flex-1 shrink-0 h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12">
       <span className="text-2xl font-semibold mb-6">My Jokes list</span>
       <div className="w-full h-full overflow-y-auto gap-y-2 flex flex-col">
         {jokes.length > 0 ? (
@@ -68,7 +68,12 @@ const MyJokes = () => {
               className="w-full text-lg flex items-center gap-x-4 px-2 group duration-150 hover:bg-light-pink/50 hover:cursor-pointer font-light rounded-lg"
             >
               <span>{i + 1}.</span>
-              <div className="flex-1 overflow-hidden truncate">{joke.joke}</div>
+              <div className="flex-1">
+                <div className="max-w-xl overflow-hidden truncate">
+                  {joke.joke}
+                </div>
+              </div>
+
               <FiDelete className="hover:cursor-pointer ml-10 group-hover:text-dark-pink" />
             </div>
           ))

@@ -60,10 +60,10 @@ const RandomJoke = () => {
       }
       const data = await response.json();
       if (impersonateInput) {
-        setJoke(replaceChuckNorris(data.value));
+        setJoke(`"${replaceChuckNorris(data.value)}"`);
         return;
       }
-      setJoke(data.value);
+      setJoke(`"${data.value}"`);
     } catch (error) {
       toast.error("Chuck Norris kicked the joke back to the server, try again");
     }
@@ -100,7 +100,7 @@ const RandomJoke = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-3xl  h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12 relative">
+    <div className="w-full flex-1 shrink-0  h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12 relative">
       <img
         src={Chuck}
         alt="Chuck Norris picture"
@@ -113,7 +113,7 @@ const RandomJoke = () => {
           <Spinner />
         </div>
       ) : (
-        <p className="text-xl italic">"{joke}"</p>
+        <p className="text-xl italic">{joke}</p>
       )}
 
       <div className="w-full flex gap-x-6">

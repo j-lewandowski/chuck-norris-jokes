@@ -24,7 +24,7 @@ export const AddJoke = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12">
+    <div className="w-full flex-1 shrink-0 h-full rounded-2xl bg-white shadow-2xl flex flex-col items-start justify-between py-24 px-12">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col w-2/3 h-full justify-between"
