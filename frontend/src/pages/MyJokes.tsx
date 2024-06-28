@@ -73,7 +73,11 @@ const MyJokes = () => {
             </div>
           ))
         ) : (
-          <div></div>
+          <div>
+            <span className="text-lg font-light">
+              You don't have any saved jokes yet
+            </span>
+          </div>
         )}
       </div>
     </div>
