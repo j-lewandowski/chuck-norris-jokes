@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
@@ -62,6 +62,13 @@ export class UsersService {
     await this.prisma.user.delete({ where: { email: email } });
     return {
       message: 'Deleted user successfully',
+    };
+  }
+
+  async removeAll() {
+    await this.prisma.user.deleteMany({});
+    return {
+      message: 'Deleted all users successfully',
     };
   }
 }
