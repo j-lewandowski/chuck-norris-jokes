@@ -27,7 +27,7 @@ const SignIn = () => {
     const res = await data.json();
 
     if (res.error) {
-      toast.error(res.message[0]);
+      toast.error(res.message);
       return;
     }
 
