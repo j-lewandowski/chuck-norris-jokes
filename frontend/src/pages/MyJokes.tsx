@@ -13,11 +13,14 @@ const MyJokes = () => {
     isMounted.current = true;
     const fetchJokes = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL + "/jokes", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await fetch(
+          import.meta.env.VITE_API_BASE_URL + "/jokes",
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         const data = await response.json();
         setJokes(data);
         setIsLoading(false);
