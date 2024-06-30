@@ -1,5 +1,13 @@
 version: "3.8"
 services:
+  database:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - "./backend/.env"
+    ports:
+      - "5444:5432"
+
   frontend:
     build: ./frontend
     container_name: frontend
@@ -10,19 +18,11 @@ services:
   backend:
     build: ./backend
     container_name: backend
-    environment:
-      JWT_SECRET: "VERY_SECRET_VALUE"
-      DATABASE_URL: "postgresql://postgres:postgres@localhost:6000/chuck-norris-db?schema=public"
+    restart: "on-failure"
+    env_file:
+      - "./backend/.env"
     ports:
       - "4000:4000"
     stdin_open: true
-
-  database:
-    image: postgres:latest
-    container_name: database
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: chuck-norris-db
-    ports:
-      - "6000:6000"
+    depends_on:
+      - database
