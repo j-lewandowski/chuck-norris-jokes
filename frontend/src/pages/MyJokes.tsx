@@ -37,7 +37,7 @@ const MyJokes = () => {
 
   const onDelete = async (id: string) => {
     try {
-      await fetch(import.meta.env.VITE_API_URL + `/jokes/joke/${id}`, {
+      await fetch(import.meta.env.VITE_API_BASE_URL + `/jokes/joke/${id}`, {
         method: "DELETE",
         headers: {
           authorization: `Bearer ${localStorage.getItem("token")}`,

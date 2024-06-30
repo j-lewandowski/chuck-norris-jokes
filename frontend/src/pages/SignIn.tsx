@@ -3,6 +3,7 @@ import Logo from "../images/logo.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Particles from "../images/particles.svg?react";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const [email, setEmail] = useState<string>("");
@@ -12,18 +13,21 @@ const SignIn = () => {
 
   const onSubmit = async () => {
     if (!email || !password) return;
-    const data = await fetch(import.meta.env.VITE_API_URL + "/auth/sign-in", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    const data = await fetch(
+      import.meta.env.VITE_API_BASE_URL + "/auth/sign-in",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      }
+    );
 
     const res = await data.json();
 
     if (res.error) {
-      alert(res.message);
+      toast.error(res.message[0]);
       return;
     }
 

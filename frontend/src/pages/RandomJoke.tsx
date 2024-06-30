@@ -29,14 +29,17 @@ const RandomJoke = () => {
 
   const onSave = async () => {
     try {
-      const response = await fetch(import.meta.env.VITE_API_URL + "/jokes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ joke }),
-      });
+      const response = await fetch(
+        import.meta.env.VITE_API_BASE_URL + "/jokes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ joke }),
+        }
+      );
       await response.json();
 
       toast.success("Joke saved successfully");
